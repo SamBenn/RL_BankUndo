@@ -1,13 +1,13 @@
-package com.example;
+package com.MyBulwark.BankUndo;
 
 import net.runelite.client.RuneLite;
 import net.runelite.client.externalplugins.ExternalPluginManager;
 
-public class ExamplePluginTest
+public class BankUndoTest
 {
 	public static void main(String[] args) throws Exception
 	{
-		ExternalPluginManager.loadBuiltin(ExamplePlugin.class);
+		ExternalPluginManager.loadBuiltin(BankUndoPlugin.class);
 		RuneLite.main(args);
 	}
 }
