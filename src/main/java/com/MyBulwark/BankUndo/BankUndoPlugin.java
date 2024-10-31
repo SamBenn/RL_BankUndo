@@ -27,13 +27,15 @@ public class BankUndoPlugin extends Plugin
 	@Override
 	protected void startUp() throws Exception
 	{
-		log.info("Example started!");
+		log.info("Bank Undo started!");
+		keyManager.registerKeyListener(keyListener);
 	}
 
 	@Override
 	protected void shutDown() throws Exception
 	{
-		log.info("Example stopped!");
+		keyManager.unregisterKeyListener(keyListener);
+		log.info("Bank Undo stopped!");
 	}
 
 	@Subscribe
@@ -44,6 +46,39 @@ public class BankUndoPlugin extends Plugin
 			client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", "Example says " + config.greeting(), null);
 		}
 	}
+
+	private final KeyListener keyListener = new KeyListener() {
+		@Override
+		public void keyTyped(KeyEvent e) {
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+		}
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+			if (config.toggleKeybind().matches(e)) {
+				Widget bankContainer = client.getWidget(WidgetInfo.BANK_ITEM_CONTAINER);
+				if (bankContainer == null || bankContainer.isSelfHidden()) {
+					return;
+				}
+
+				configManager.setConfiguration(CONFIG_GROUP_NAME, RecentBankConfig.VIEW_TOGGLE, !config.recentViewToggled());
+				e.consume();
+			}
+
+			if (config.toggleLockKeybind().matches(e)) {
+				Widget bankContainer = client.getWidget(WidgetInfo.BANK_ITEM_CONTAINER);
+				if (bankContainer == null || bankContainer.isSelfHidden()) {
+					return;
+				}
+
+				configManager.setConfiguration(CONFIG_GROUP_NAME, RecentBankConfig.LOCK_TOGGLE, !config.lockToggled());
+				e.consume();
+			}
+		}
+	};
 
 	@Provides
 	BankUndoConfig provideConfig(ConfigManager configManager)
